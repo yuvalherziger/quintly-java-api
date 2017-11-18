@@ -1,6 +1,12 @@
 # quintly-java-api
 quintly's Social Media Analytics API interface for Java
 
+## TODOs
+
+- Response models
+- Exceptions
+- More tests
+
 ## Installation
 To build the project from gradle wrapper, run:
 ```bash

@@ -1,0 +1,43 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": 16,
+      "name": "Microsoft",
+      "appendix": null,
+      "platformType": "facebook",
+      "platformId": "20528438720",
+      "platformUsername": "Microsoft",
+      "url": "http://www.facebook.com/Microsoft",
+      "color": null,
+      "audienceDataSinceTime": "2010-06-10 14:00:00",
+      "interactionDataSinceTime": "2010-05-26 17:00:00",
+      "spaces": [
+        {
+          "id": 3251,
+          "name": "Analysts Space"
+        }
+      ],
+      "groups": []
+    },
+    {
+      "id": 18,
+      "name": "Coca-Cola",
+      "appendix": null,
+      "platformType": "facebook",
+      "platformId": "40796308305",
+      "platformUsername": "Coca-Cola",
+      "url": "http://www.facebook.com/Coca-Cola",
+      "color": null,
+      "audienceDataSinceTime": "2009-10-04 07:00:00",
+      "interactionDataSinceTime": "2009-04-29 18:00:00",
+      "spaces": [
+        {
+          "id": 123,
+          "name": "Bob, benchmarking"
+        }
+      ],
+      "groups": []
+    }
+  ]
+}

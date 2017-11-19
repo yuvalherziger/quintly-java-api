@@ -3,9 +3,6 @@ package com.quintly.api;
 import com.quintly.api.endpoint.Endpoint;
 import java.io.IOException;
 
-import com.quintly.api.entity.BaseCollection;
-import com.quintly.api.entity.Data;
-import com.quintly.api.entity.ProfileCollection;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 

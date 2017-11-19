@@ -3,7 +3,8 @@ quintly's Social Media Analytics API interface for Java
 
 ## TODOs
 
-- Response models
+- Response models should be generic
+- Response entities should be injectable (e.g. custom user entity objects to be injected)
 - Exceptions
 - More tests
 
@@ -22,8 +23,8 @@ Otherwise, from a [global gradle installation](https://gradle.org/install/):
 ### List-Profiles endpoint:
 ```java
 import com.quintly.api.*;
-...
-...
+// ...
+// ...
 // fetch a client:
 Client client = ClientFactory.createClient();
 

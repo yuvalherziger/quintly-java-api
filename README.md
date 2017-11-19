@@ -12,7 +12,7 @@ To build the project from gradle wrapper, run:
 ```bash
 ~ ./gradlew build
 ```
-Otherwise, from a global gradle installation:
+Otherwise, from a [global gradle installation](https://gradle.org/install/):
 ```bash
 ~ gradle build
 ```

@@ -2,6 +2,10 @@ package com.quintly.api;
 
 import com.quintly.api.endpoint.Endpoint;
 import java.io.IOException;
+
+import com.quintly.api.entity.BaseCollection;
+import com.quintly.api.entity.Data;
+import com.quintly.api.entity.ProfileCollection;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 
@@ -27,8 +31,8 @@ public class Client {
                 this.version,
                 endpoint.getPathAsString()
         );
-        //System.out.println("fullyQualifiedUrl: " + fullyQualifiedUrl);
+
         HttpGet request = httpGet == null ? new HttpGet(fullyQualifiedUrl) : httpGet;
-        return new Response(this.httpClient.execute(request));
+        return new Response(this.httpClient.execute(request), endpoint);
     }
 }

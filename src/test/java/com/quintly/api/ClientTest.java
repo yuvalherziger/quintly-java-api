@@ -1,6 +1,8 @@
 package com.quintly.api;
 
 import com.quintly.api.endpoint.Qql;
+import com.quintly.api.entity.Profile;
+import com.quintly.api.exception.IncompatibleGetterException;
 import org.apache.http.*;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -14,7 +16,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -55,13 +56,13 @@ public class ClientTest extends BaseTestCase {
                 httpGetMock
         );
 
-        assertTrue(response.toJson().isSuccess());
+        assertTrue(response.getData().isSuccess());
         assertEquals(200, response.getStatusCode());
-        assertEquals(0, response.toJson().getData().size());
+        assertEquals(0, response.getData().getData().size());
     }
 
     @Test
-    public void testExecuteGetWithListProfilesResponse()  throws IOException {
+    public void testExecuteGetWithListProfilesResponse()  throws IOException, IncompatibleGetterException {
         String responseString = this.loadResourceAsString("/src/test/fixtures/listProfilesResponse.json");
 
         CloseableHttpClient httpClientMock = mock(CloseableHttpClient.class);
@@ -94,18 +95,69 @@ public class ClientTest extends BaseTestCase {
                 httpGetMock
         );
 
-        assertTrue(response.toJson().isSuccess());
+        assertTrue(response.getProfilesCollection().isSuccess());
         assertEquals(200, response.getStatusCode());
-        assertEquals(2, response.toJson().getData().size());
+        assertEquals(2, response.getProfilesCollection().getData().size());
 
-        ArrayList<Map<String, Object>> data = response.toJson().getData();
+        ArrayList<Profile> data = response.getProfilesCollection().getData();
 
-        Map<String, Object> element1 = data.get(0);
-        assertEquals(16, ((Double) element1.get("id")).intValue());
-        assertEquals("Microsoft", element1.get("name"));
+        Profile profile1 = data.get(0);
+        assertEquals(16, profile1.getId());
+        assertEquals("Microsoft", profile1.getName());
+        assertNull(profile1.getAppendix());
+        assertEquals("facebook", profile1.getPlatformType());
+        assertEquals("20528438720", profile1.getPlatformId());
+        assertEquals("Microsoft", profile1.getPlatformUsername());
+        assertEquals("http://www.facebook.com/Microsoft", profile1.getUrl());
+        assertNull(profile1.getColor());
+        assertEquals("2010-06-10 14:00:00", profile1.getAudienceDataSinceTime());
+        assertEquals("2010-05-26 17:00:00", profile1.getInteractionDataSinceTime());
+        assertEquals(1, profile1.getSpaces().size());
+        assertEquals(3251, profile1.getSpaces().get(0).getId());
+        assertEquals("Analysts Space", profile1.getSpaces().get(0).getName());
+        assertEquals(0, profile1.getGroups().size());
+    }
 
-        Map<String, Object> element2 = data.get(1);
-        assertEquals(18, ((Double) element2.get("id")).intValue());
-        assertEquals("Coca-Cola", element2.get("name"));
+    @Test
+    public void testExecuteGetWithIncompatibleGetterException()  throws IOException {
+        String responseString = "{\"success\":true,\"data\":[]}";
+
+        CloseableHttpClient httpClientMock = mock(CloseableHttpClient.class);
+
+
+        HttpGet httpGetMock = mock(HttpGet.class);
+        CloseableHttpResponse httpResponseMock = mock(CloseableHttpResponse.class);
+        StatusLine statusLineMock = mock(StatusLine.class);
+
+        BasicHttpEntity httpEntity = new BasicHttpEntity();
+        InputStream stream = new ByteArrayInputStream(responseString.getBytes(StandardCharsets.UTF_8.name()));
+        httpEntity.setContent(stream);
+
+        when(statusLineMock.getStatusCode()).thenReturn(200);
+        when(httpResponseMock.getStatusLine()).thenReturn(statusLineMock);
+        when(httpResponseMock.getEntity()).thenReturn(httpEntity);
+        when(httpClientMock.execute(httpGetMock)).thenReturn(httpResponseMock);
+
+        Client client = new Client(httpClientMock);
+        List<Integer> profileIds = new ArrayList<Integer>();
+        profileIds.add(92);
+        Response response = client.executeGet(
+                new Credentials(2, "secretSanta"),
+                new Qql(
+                        new Date(1506816000000L),
+                        new Date(),
+                        profileIds,
+                        "SELECT profileId, time, fans FROM facebook"
+                ),
+                httpGetMock
+        );
+
+
+        try {
+            response.getProfilesCollection();
+        } catch (Exception e) {
+            assertEquals(IncompatibleGetterException.class, e.getClass());
+            assertEquals("Cannot fetch profiles for this type of endpoint request.", e.getMessage());
+        }
     }
 }

@@ -3,7 +3,7 @@ package com.quintly.api.entity;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class Data implements BaseEntity {
+public class Data implements BaseResponseData {
     private boolean success;
 
     private ArrayList<Map<String, Object>> data;

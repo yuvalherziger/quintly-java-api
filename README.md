@@ -39,5 +39,5 @@ System.out.println("Response status code: " + response.getStatusCode());
 
 // Dig in:
 ArrayList<Profile> profiles = response.getProfilesCollection().getData();
-System.out.println(profiles.getName());
+System.out.println(profiles..get(0).getName());
 ```

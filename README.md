@@ -1,12 +1,13 @@
 # quintly-java-api
 quintly's Social Media Analytics API interface for Java
 
-## TODOs
+## TODO's
 
 - Response models should be generic
 - Response entities should be injectable (e.g. custom user entity objects to be injected)
 - Exceptions
 - More tests
+- Add examples folder
 
 ## Installation
 To build the project from gradle wrapper, run:
@@ -40,5 +41,5 @@ System.out.println("Response status code: " + response.getStatusCode());
 
 // Dig in:
 ArrayList<Profile> profiles = response.getProfilesCollection().getData();
-System.out.println(profiles..get(0).getName());
+System.out.println(profiles.get(0).getName());
 ```

@@ -35,7 +35,7 @@ public class Qql implements Endpoint {
     private SortDirection sortDir;
 
     public Qql(Date startTime, Date endTime, List<Integer> profileIds, String qqlQueryOrMetric) {
-        this.validate(startTime, endTime, profileIds);
+        this.validate(startTime, endTime, profileIds, qqlQueryOrMetric);
         this.startTime = startTime;
         this.endTime = endTime;
         this.profileIds = profileIds;
@@ -48,31 +48,28 @@ public class Qql implements Endpoint {
         }
     }
 
-    public Qql(Date startTime, Date endTime, List<Integer> profileIds, String qqlQueryOrMetric, Interval interval) {
-        this(startTime, endTime, profileIds, qqlQueryOrMetric);
+    public void setInterval(Interval interval) {
         this.interval = interval;
     }
 
-    public Qql(Date startTime, Date endTime, List<Integer> profileIds, String qqlQueryOrMetric, Interval interval, TimeZone timezone) {
-        this(startTime, endTime, profileIds, qqlQueryOrMetric, interval);
+    public void setTimezone(TimeZone timezone) {
         this.timezone = timezone;
     }
 
-    public Qql(Date startTime, Date endTime, List<Integer> profileIds, String qqlQueryOrMetric, Interval interval, TimeZone timezone, String sortBy) {
-        this(startTime, endTime, profileIds, qqlQueryOrMetric, interval, timezone);
+    public void setSortBy(String sortBy) {
         this.sortBy = sortBy;
     }
 
-    public Qql(Date startTime, Date endTime, List<Integer> profileIds, String qqlQueryOrMetric, Interval interval, TimeZone timezone, String sortBy, SortDirection sortDir) {
-        this(startTime, endTime, profileIds, qqlQueryOrMetric, interval, timezone, sortBy);
+    public void setSortDir(SortDirection sortDir) {
         this.sortDir = sortDir;
     }
 
-    private void validate(Date startTime, Date endTime, List<Integer> profileIds)
+    private void validate(Date startTime, Date endTime, List<Integer> profileIds, String qqlQueryOrMetric)
     {
         Validate.notNull(startTime, "The 'startTime' parameter is mandatory");
         Validate.notNull(endTime, "The 'endTime' parameter is mandatory");
         Validate.notEmpty(profileIds, "The 'profileIds' parameter is mandatory");
+        Validate.notEmpty(qqlQueryOrMetric, "The 'qqlQueryOrMetric' parameter is mandatory");
     }
 
     public String getPathAsString() throws UnsupportedEncodingException {

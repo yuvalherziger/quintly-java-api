@@ -8,6 +8,7 @@ quintly's Social Media Analytics API interface for Java
 - Exceptions
 - More tests
 - Add examples folder
+- Add CI integration, add a build status badge and a code coverage badge 
 
 ## Installation
 To build the project from gradle wrapper, run:

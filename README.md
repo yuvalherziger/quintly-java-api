@@ -4,12 +4,10 @@ For more information about the QPI, see [API documentation](https://api.quintly.
 
 ## TODO's
 
-- Response models should be generic
-- Response entities should be injectable (e.g. custom user entity objects to be injected)
 - Exceptions
 - More tests
 - Add examples folder
-- Add CI integration, add a build status badge and a code coverage badge 
+- Add CI integration, add a build status badge and a code coverage badge
 
 ## Installation
 To build the project from gradle wrapper, run:

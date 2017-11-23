@@ -48,7 +48,7 @@ class MyApp {
 ```
 
 ### Custom Response Model:
-The thing that makes the QQL endpoint of quintly's API, is that the response's structure is a direct derivative of the metric or QQL query that's requested.
+The thing that makes the QQL endpoint of quintly's API different from others, is that the response's structure is a direct derivative of the metric or QQL query that's requested, thus it's not predictable.
 The following QQL query is a legitimate query, where the `profileId`, `time` and `fans` data points are selected from the `Facebook` data source:
 
 ```sql

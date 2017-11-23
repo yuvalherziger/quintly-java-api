@@ -1,4 +1,4 @@
-package com.quintly.api.entity.examples;
+package com.quintly.api.enitity;
 
 import java.util.ArrayList;
 

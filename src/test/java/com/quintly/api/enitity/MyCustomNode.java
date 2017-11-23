@@ -1,4 +1,4 @@
-package com.quintly.api.entity.examples;
+package com.quintly.api.enitity;
 
 /**
  * This class demonstrates how a custom response model node from the quintly API could look like

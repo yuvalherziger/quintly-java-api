@@ -2,7 +2,7 @@ package com.quintly.api;
 
 import com.quintly.api.endpoint.Qql;
 import com.quintly.api.entity.Profile;
-import com.quintly.api.entity.examples.MyCustomResponseModel;
+import com.quintly.api.enitity.MyCustomResponseModel;
 import com.quintly.api.exception.IncompatibleGetterException;
 import org.apache.http.*;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -197,7 +197,7 @@ public class ClientTest extends BaseTestCase {
         );
 
         MyCustomResponseModel myCustomResponseModel = (MyCustomResponseModel) response.getData(
-                new ModelParser<MyCustomResponseModel>(MyCustomResponseModel.class)
+                new ModelParser<>(MyCustomResponseModel.class)
         );
 
         assertEquals(200, response.getStatusCode());

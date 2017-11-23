@@ -2,6 +2,7 @@ package com.quintly.api;
 
 import com.quintly.api.endpoint.Qql;
 import com.quintly.api.entity.Profile;
+import com.quintly.api.entity.examples.MyCustomResponseModel;
 import com.quintly.api.exception.IncompatibleGetterException;
 import org.apache.http.*;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -159,5 +160,50 @@ public class ClientTest extends BaseTestCase {
             assertEquals(IncompatibleGetterException.class, e.getClass());
             assertEquals("Cannot fetch profiles for this type of endpoint request.", e.getMessage());
         }
+    }
+
+    @Test
+    public void testExecuteGetWithCustomModel()  throws IOException {
+        String responseString = "{\"success\":true,\"data\":[{\"foo\": \"bar\", \"bar\": \"foo\"}]}";
+
+        CloseableHttpClient httpClientMock = mock(CloseableHttpClient.class);
+
+
+        HttpGet httpGetMock = mock(HttpGet.class);
+        CloseableHttpResponse httpResponseMock = mock(CloseableHttpResponse.class);
+        StatusLine statusLineMock = mock(StatusLine.class);
+
+        BasicHttpEntity httpEntity = new BasicHttpEntity();
+        InputStream stream = new ByteArrayInputStream(responseString.getBytes(StandardCharsets.UTF_8.name()));
+        httpEntity.setContent(stream);
+
+        when(statusLineMock.getStatusCode()).thenReturn(200);
+        when(httpResponseMock.getStatusLine()).thenReturn(statusLineMock);
+        when(httpResponseMock.getEntity()).thenReturn(httpEntity);
+        when(httpClientMock.execute(httpGetMock)).thenReturn(httpResponseMock);
+
+        Client client = new Client(httpClientMock);
+        List<Integer> profileIds = new ArrayList<Integer>();
+        profileIds.add(92);
+        Response response = client.executeGet(
+                new Credentials(2, "secretSanta"),
+                new Qql(
+                        new Date(1506816000000L),
+                        new Date(),
+                        profileIds,
+                        "SELECT foo, bar FROM facebook"
+                ),
+                httpGetMock
+        );
+
+        MyCustomResponseModel myCustomResponseModel = (MyCustomResponseModel) response.getData(
+                new ModelParser<MyCustomResponseModel>(MyCustomResponseModel.class)
+        );
+
+        assertEquals(200, response.getStatusCode());
+        assertTrue(myCustomResponseModel.isSuccess());
+        assertEquals(1, myCustomResponseModel.getData().size());
+        assertEquals("bar", myCustomResponseModel.getData().get(0).getFoo());
+        assertEquals("foo", myCustomResponseModel.getData().get(0).getBar());
     }
 }

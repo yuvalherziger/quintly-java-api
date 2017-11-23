@@ -34,6 +34,10 @@ public class Response {
         return data;
     }
 
+    public Object getData(ModelParser modelParser) throws IOException {
+        return modelParser.run(this.message);
+    }
+
     public ProfileCollection getProfilesCollection() throws IOException, IncompatibleGetterException {
         if (this.isProfilesRequest(endpoint)) {
             throw new IncompatibleGetterException("Cannot fetch profiles for this type of endpoint request.");

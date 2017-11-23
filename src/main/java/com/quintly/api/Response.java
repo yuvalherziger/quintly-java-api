@@ -3,6 +3,7 @@ package com.quintly.api;
 import com.google.gson.Gson;
 import com.quintly.api.endpoint.Endpoint;
 import com.quintly.api.entity.*;
+import com.quintly.api.exception.BadResponseException;
 import com.quintly.api.exception.IncompatibleGetterException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -28,9 +29,13 @@ public class Response {
         return this.message;
     }
 
-    public BaseResponseData getData() throws IOException {
+    public BaseResponseData getData() throws IOException, BadResponseException {
         Gson gsonResponse = new Gson();
         Data data = gsonResponse.fromJson(this.getMessage(), Data.class);
+        if (!data.isSuccess()) {
+            BadResponse badResponse = gsonResponse.fromJson(this.getMessage(), BadResponse.class);
+            throw new BadResponseException(badResponse.getMessage());
+        }
         return data;
     }
 
@@ -38,12 +43,16 @@ public class Response {
         return modelParser.run(this.message);
     }
 
-    public ProfileCollection getProfilesCollection() throws IOException, IncompatibleGetterException {
+    public ProfileCollection getProfilesCollection() throws IOException, IncompatibleGetterException, BadResponseException {
         if (this.isProfilesRequest(endpoint)) {
             throw new IncompatibleGetterException("Cannot fetch profiles for this type of endpoint request.");
         }
         Gson gsonResponse = new Gson();
         ProfileCollection profileCollection = gsonResponse.fromJson(this.getMessage(), ProfileCollection.class);
+        if (!profileCollection.isSuccess()) {
+            BadResponse badResponse = gsonResponse.fromJson(this.getMessage(), BadResponse.class);
+            throw new BadResponseException(badResponse.getMessage());
+        }
         return profileCollection;
     }
 

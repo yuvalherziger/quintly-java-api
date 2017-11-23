@@ -4,6 +4,7 @@ import com.quintly.api.endpoint.Qql;
 import com.quintly.api.enitity.MyCustomNode;
 import com.quintly.api.entity.Profile;
 import com.quintly.api.enitity.MyCustomResponseModel;
+import com.quintly.api.exception.BadResponseException;
 import com.quintly.api.exception.IncompatibleGetterException;
 import org.apache.http.*;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -25,7 +26,7 @@ import static org.mockito.Mockito.when;
 public class ClientTest extends BaseTestCase {
 
     @Test
-    public void testExecuteGetWithEmptyResponse()  throws IOException {
+    public void testExecuteGetWithEmptyResponse()  throws IOException, BadResponseException {
         String responseString = "{\"success\":true,\"data\":[]}";
 
         CloseableHttpClient httpClientMock = mock(CloseableHttpClient.class);
@@ -64,7 +65,7 @@ public class ClientTest extends BaseTestCase {
     }
 
     @Test
-    public void testExecuteGetWithListProfilesResponse()  throws IOException, IncompatibleGetterException {
+    public void testExecuteGetWithListProfilesResponse()  throws IOException, IncompatibleGetterException, BadResponseException {
         String responseString = this.loadResourceAsString("/src/test/fixtures/listProfilesResponse.json");
 
         CloseableHttpClient httpClientMock = mock(CloseableHttpClient.class);
@@ -228,5 +229,90 @@ public class ClientTest extends BaseTestCase {
         assertEquals("2017-10-02 00:00:00", node2.getTime());
         assertEquals(100, node2.getProfileId());
         assertEquals(200349, node2.getFans());
+    }
+
+    @Test
+    public void testExecuteGetWithBadResponseExceptionFromQqlEndpoint()  throws IOException {
+        String responseString = "{\"success\":false,\"error\":{\"message\":\"It appears like the configuration does not comprise of a valid SQL query. Please check your syntax and ensure that the SQL query you have entered is a valid one. You may find hints as to what went wrong within the following message: Unable to prepare statement: 1, no such column: profile\"}}";
+
+        CloseableHttpClient httpClientMock = mock(CloseableHttpClient.class);
+
+
+        HttpGet httpGetMock = mock(HttpGet.class);
+        CloseableHttpResponse httpResponseMock = mock(CloseableHttpResponse.class);
+        StatusLine statusLineMock = mock(StatusLine.class);
+
+        BasicHttpEntity httpEntity = new BasicHttpEntity();
+        InputStream stream = new ByteArrayInputStream(responseString.getBytes(StandardCharsets.UTF_8.name()));
+        httpEntity.setContent(stream);
+
+        when(statusLineMock.getStatusCode()).thenReturn(500);
+        when(httpResponseMock.getStatusLine()).thenReturn(statusLineMock);
+        when(httpResponseMock.getEntity()).thenReturn(httpEntity);
+        when(httpClientMock.execute(httpGetMock)).thenReturn(httpResponseMock);
+
+        Client client = new Client(httpClientMock);
+        List<Integer> profileIds = new ArrayList<Integer>();
+        profileIds.add(92);
+        Response response = client.executeGet(
+                new Credentials(2, "secretSanta"),
+                new Qql(
+                        new Date(1506816000000L),
+                        new Date(),
+                        profileIds,
+                        "SELECT profile, time, fans FROM facebook"
+                ),
+                httpGetMock
+        );
+
+        try {
+            response.getData();
+        } catch (Exception e) {
+            String expectedExceptionMessage = "It appears like the configuration does not comprise of a valid SQL query. Please check your syntax and ensure that the SQL query you have entered is a valid one. You may find hints as to what went wrong within the following message: Unable to prepare statement: 1, no such column: profile";
+            assertEquals(BadResponseException.class, e.getClass());
+            assertEquals(expectedExceptionMessage, e.getMessage());
+        }
+    }
+
+    @Test
+    public void testExecuteGetWithBadResponseExceptionFromListProfilesEndpoint()  throws IOException {
+        String responseString = "{\"success\":false,\"error\":{\"message\":\"an internal server error has occurred, please try again later.\"}}";
+
+        CloseableHttpClient httpClientMock = mock(CloseableHttpClient.class);
+
+
+        HttpGet httpGetMock = mock(HttpGet.class);
+        CloseableHttpResponse httpResponseMock = mock(CloseableHttpResponse.class);
+        StatusLine statusLineMock = mock(StatusLine.class);
+
+        BasicHttpEntity httpEntity = new BasicHttpEntity();
+        InputStream stream = new ByteArrayInputStream(responseString.getBytes(StandardCharsets.UTF_8.name()));
+        httpEntity.setContent(stream);
+
+        when(statusLineMock.getStatusCode()).thenReturn(500);
+        when(httpResponseMock.getStatusLine()).thenReturn(statusLineMock);
+        when(httpResponseMock.getEntity()).thenReturn(httpEntity);
+        when(httpClientMock.execute(httpGetMock)).thenReturn(httpResponseMock);
+
+        Client client = new Client(httpClientMock);
+        List<Integer> profileIds = new ArrayList<Integer>();
+        profileIds.add(92);
+        Response response = client.executeGet(
+                new Credentials(2, "secretSanta"),
+                new Qql(
+                        new Date(1506816000000L),
+                        new Date(),
+                        profileIds,
+                        "SELECT profileId, time, fans FROM facebook"
+                ),
+                httpGetMock
+        );
+        try {
+            response.getProfilesCollection();
+        } catch (Exception e) {
+            String expectedExceptionMessage = "an internal server error has occurred, please try again later.";
+            assertEquals(BadResponseException.class, e.getClass());
+            assertEquals(expectedExceptionMessage, e.getMessage());
+        }
     }
 }

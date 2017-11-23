@@ -5,15 +5,21 @@ package com.quintly.api.enitity;
  */
 public class MyCustomNode {
 
-    private String foo;
+    private int profileId;
 
-    private String bar;
+    private String time;
 
-    public String getFoo() {
-        return foo;
+    private int fans;
+
+    public int getProfileId() {
+        return profileId;
     }
 
-    public String getBar() {
-        return bar;
+    public String getTime() {
+        return time;
+    }
+
+    public int getFans() {
+        return fans;
     }
 }

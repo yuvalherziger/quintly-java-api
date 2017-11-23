@@ -1,6 +1,7 @@
 package com.quintly.api;
 
 import com.quintly.api.endpoint.Qql;
+import com.quintly.api.enitity.MyCustomNode;
 import com.quintly.api.entity.Profile;
 import com.quintly.api.enitity.MyCustomResponseModel;
 import com.quintly.api.exception.IncompatibleGetterException;
@@ -164,7 +165,21 @@ public class ClientTest extends BaseTestCase {
 
     @Test
     public void testExecuteGetWithCustomModel()  throws IOException {
-        String responseString = "{\"success\":true,\"data\":[{\"foo\": \"bar\", \"bar\": \"foo\"}]}";
+        String responseString = "{\n" +
+                "    \"success\": true,\n" +
+                "    \"data\": [\n" +
+                "        {\n" +
+                "            \"profileId\": 100,\n" +
+                "            \"time\": \"2017-10-01 00:00:00\",\n" +
+                "            \"fans\": 200311\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"profileId\": 100,\n" +
+                "            \"time\": \"2017-10-02 00:00:00\",\n" +
+                "            \"fans\": 200349\n" +
+                "        }\n" +
+                "\t  ]\n" +
+                "}";
 
         CloseableHttpClient httpClientMock = mock(CloseableHttpClient.class);
 
@@ -191,7 +206,7 @@ public class ClientTest extends BaseTestCase {
                         new Date(1506816000000L),
                         new Date(),
                         profileIds,
-                        "SELECT foo, bar FROM facebook"
+                        "SELECT profileId, time, fans FROM facebook"
                 ),
                 httpGetMock
         );
@@ -202,8 +217,16 @@ public class ClientTest extends BaseTestCase {
 
         assertEquals(200, response.getStatusCode());
         assertTrue(myCustomResponseModel.isSuccess());
-        assertEquals(1, myCustomResponseModel.getData().size());
-        assertEquals("bar", myCustomResponseModel.getData().get(0).getFoo());
-        assertEquals("foo", myCustomResponseModel.getData().get(0).getBar());
+        assertEquals(2, myCustomResponseModel.getData().size());
+
+        MyCustomNode node1 = myCustomResponseModel.getData().get(0);
+        assertEquals("2017-10-01 00:00:00", node1.getTime());
+        assertEquals(100, node1.getProfileId());
+        assertEquals(200311, node1.getFans());
+
+        MyCustomNode node2 = myCustomResponseModel.getData().get(1);
+        assertEquals("2017-10-02 00:00:00", node2.getTime());
+        assertEquals(100, node2.getProfileId());
+        assertEquals(200349, node2.getFans());
     }
 }

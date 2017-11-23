@@ -1,7 +1,7 @@
 # quintly-java-api
-
-[ ![Codeship Status for yuvalherziger/quintly-java-api](https://app.codeship.com/projects/5d4f67e0-b284-0135-f1e6-124eec6b3035/status?branch=master)](https://app.codeship.com/projects/258096)
 [![codecov](https://codecov.io/gh/yuvalherziger/quintly-java-api/branch/master/graph/badge.svg?token=Tnad7lN8Cb)](https://codecov.io/gh/yuvalherziger/quintly-java-api)
+[![Codeship Status for yuvalherziger/quintly-java-api](https://app.codeship.com/projects/5d4f67e0-b284-0135-f1e6-124eec6b3035/status?branch=master)](https://app.codeship.com/projects/258096)
+
 
 quintly's Social Media Analytics API interface for Java. 
 For more information about the QPI, see [API documentation](https://api.quintly.com/).

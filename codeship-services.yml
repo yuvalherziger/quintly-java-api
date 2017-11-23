@@ -1,5 +1,0 @@
-gradle:
-  build:
-    dockerfile_path: gradle/Dockerfile
-  volumes:
-    - ./tmp/:/data

@@ -1,3 +1,0 @@
-- name: ci
-  service: gradle
-  command: "bash gradlew test -i"

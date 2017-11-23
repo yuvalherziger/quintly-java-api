@@ -1,7 +1,9 @@
 package com.quintly.api;
 
 import com.quintly.api.endpoint.Qql;
+import com.quintly.api.enitity.MyCustomNode;
 import com.quintly.api.entity.Profile;
+import com.quintly.api.enitity.MyCustomResponseModel;
 import com.quintly.api.exception.IncompatibleGetterException;
 import org.apache.http.*;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -159,5 +161,72 @@ public class ClientTest extends BaseTestCase {
             assertEquals(IncompatibleGetterException.class, e.getClass());
             assertEquals("Cannot fetch profiles for this type of endpoint request.", e.getMessage());
         }
+    }
+
+    @Test
+    public void testExecuteGetWithCustomModel()  throws IOException {
+        String responseString = "{\n" +
+                "    \"success\": true,\n" +
+                "    \"data\": [\n" +
+                "        {\n" +
+                "            \"profileId\": 100,\n" +
+                "            \"time\": \"2017-10-01 00:00:00\",\n" +
+                "            \"fans\": 200311\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"profileId\": 100,\n" +
+                "            \"time\": \"2017-10-02 00:00:00\",\n" +
+                "            \"fans\": 200349\n" +
+                "        }\n" +
+                "\t  ]\n" +
+                "}";
+
+        CloseableHttpClient httpClientMock = mock(CloseableHttpClient.class);
+
+
+        HttpGet httpGetMock = mock(HttpGet.class);
+        CloseableHttpResponse httpResponseMock = mock(CloseableHttpResponse.class);
+        StatusLine statusLineMock = mock(StatusLine.class);
+
+        BasicHttpEntity httpEntity = new BasicHttpEntity();
+        InputStream stream = new ByteArrayInputStream(responseString.getBytes(StandardCharsets.UTF_8.name()));
+        httpEntity.setContent(stream);
+
+        when(statusLineMock.getStatusCode()).thenReturn(200);
+        when(httpResponseMock.getStatusLine()).thenReturn(statusLineMock);
+        when(httpResponseMock.getEntity()).thenReturn(httpEntity);
+        when(httpClientMock.execute(httpGetMock)).thenReturn(httpResponseMock);
+
+        Client client = new Client(httpClientMock);
+        List<Integer> profileIds = new ArrayList<Integer>();
+        profileIds.add(92);
+        Response response = client.executeGet(
+                new Credentials(2, "secretSanta"),
+                new Qql(
+                        new Date(1506816000000L),
+                        new Date(),
+                        profileIds,
+                        "SELECT profileId, time, fans FROM facebook"
+                ),
+                httpGetMock
+        );
+
+        MyCustomResponseModel myCustomResponseModel = (MyCustomResponseModel) response.getData(
+                new ModelParser<>(MyCustomResponseModel.class)
+        );
+
+        assertEquals(200, response.getStatusCode());
+        assertTrue(myCustomResponseModel.isSuccess());
+        assertEquals(2, myCustomResponseModel.getData().size());
+
+        MyCustomNode node1 = myCustomResponseModel.getData().get(0);
+        assertEquals("2017-10-01 00:00:00", node1.getTime());
+        assertEquals(100, node1.getProfileId());
+        assertEquals(200311, node1.getFans());
+
+        MyCustomNode node2 = myCustomResponseModel.getData().get(1);
+        assertEquals("2017-10-02 00:00:00", node2.getTime());
+        assertEquals(100, node2.getProfileId());
+        assertEquals(200349, node2.getFans());
     }
 }

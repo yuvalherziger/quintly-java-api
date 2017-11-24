@@ -1,5 +1,6 @@
 package com.quintly.api;
 
+import com.quintly.api.endpoint.ListProfiles;
 import com.quintly.api.endpoint.Qql;
 import com.quintly.api.enitity.MyCustomNode;
 import com.quintly.api.entity.Profile;
@@ -89,12 +90,7 @@ public class ClientTest extends BaseTestCase {
         profileIds.add(92);
         Response response = client.executeGet(
                 new Credentials(2, "secretSanta"),
-                new Qql(
-                        new Date(1506816000000L),
-                        new Date(),
-                        profileIds,
-                        "SELECT profileId, time, fans FROM facebook"
-                ),
+                new ListProfiles(),
                 httpGetMock
         );
 
@@ -118,7 +114,10 @@ public class ClientTest extends BaseTestCase {
         assertEquals(1, profile1.getSpaces().size());
         assertEquals(3251, profile1.getSpaces().get(0).getId());
         assertEquals("Analysts Space", profile1.getSpaces().get(0).getName());
-        assertEquals(0, profile1.getGroups().size());
+        assertEquals(1, profile1.getGroups().size());
+        assertEquals(1239, profile1.getGroups().get(0).getId());
+        assertEquals("Tech Brands", profile1.getGroups().get(0).getName());
+        assertEquals(3251, profile1.getGroups().get(0).getSpaceId());
     }
 
     @Test
@@ -308,7 +307,7 @@ public class ClientTest extends BaseTestCase {
                 httpGetMock
         );
         try {
-            response.getProfilesCollection();
+            response.getData();
         } catch (Exception e) {
             String expectedExceptionMessage = "an internal server error has occurred, please try again later.";
             assertEquals(BadResponseException.class, e.getClass());

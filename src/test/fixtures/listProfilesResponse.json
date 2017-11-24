@@ -18,7 +18,13 @@
           "name": "Analysts Space"
         }
       ],
-      "groups": []
+      "groups": [
+        {
+          "id": 1239,
+          "name": "Tech Brands",
+          "spaceId": 3251
+        }
+      ]
     },
     {
       "id": 18,

@@ -44,7 +44,7 @@ public class Response {
     }
 
     public ProfileCollection getProfilesCollection() throws IOException, IncompatibleGetterException, BadResponseException {
-        if (this.isProfilesRequest(endpoint)) {
+        if (!this.isProfilesRequest(endpoint)) {
             throw new IncompatibleGetterException("Cannot fetch profiles for this type of endpoint request.");
         }
         Gson gsonResponse = new Gson();
@@ -61,7 +61,7 @@ public class Response {
     }
 
     private boolean isProfilesRequest(Endpoint endpoint) {
-        if (endpoint.getClass().getName().equals("ListProfiles")) {
+        if (endpoint.getClass().getSimpleName().equals("ListProfiles")) {
             return true;
         }
         return false;

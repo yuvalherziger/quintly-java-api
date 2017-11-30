@@ -3,7 +3,7 @@
 [![Codeship Status for yuvalherziger/quintly-java-api](https://app.codeship.com/projects/5d4f67e0-b284-0135-f1e6-124eec6b3035/status?branch=master)](https://app.codeship.com/projects/258096)
 
 
-A light-weight Java interface for quintly's Social Media Analytics API. 
+A light-weight Java library for quintly's Social Media Analytics API. 
 For more information about the API, see [quintly's API documentation](https://api.quintly.com/).
 
 ## TODO's
@@ -55,6 +55,25 @@ The following QQL query is a legitimate query, where the `profileId`, `time` and
 
 ```sql
 SELECT profileId, time, fans FROM facebook
+```
+
+The response from the API would be along the following lines:
+
+```json
+{
+    "success": true,
+    "data": [{
+            "profileId": 123,
+            "time": "2017-11-29 00:00:00",
+            "fans": 1947182
+        },
+        {
+            "profileId": 123,
+            "time": "2017-11-30 00:00:00",
+            "fans": 1947310
+        }
+    ]
+}
 ```
 
 The library allows you to pass down your custom response model, to create a clear interface between the raw response and your application's models.

@@ -8,10 +8,8 @@ For more information about the API, see [quintly's API documentation](https://ap
 
 ## TODO's
 
-- Exceptions
-- More tests
-- Add examples folder
-- Add CI integration, add a build status badge and a code coverage badge
+- Add `config.yml.dist` and allow loading configurations from a resource
+- Add examples package
 
 ## Installation
 To build the project from gradle wrapper, run:

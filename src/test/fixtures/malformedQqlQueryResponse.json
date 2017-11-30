@@ -1,0 +1,6 @@
+{
+  "success": false,
+  "error": {
+    "message": "It appears like the configuration does not comprise of a valid SQL query. Please check your syntax and ensure that the SQL query you have entered is a valid one. You may find hints as to what went wrong within the following message: Unable to prepare statement: 1, no such column: profile"
+  }
+}

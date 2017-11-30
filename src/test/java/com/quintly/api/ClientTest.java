@@ -20,19 +20,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ClientTest extends BaseTestCase {
 
-    @Test
     public void testExecuteGetWithEmptyResponse()  throws IOException, BadResponseException {
-        String responseString = "{\"success\":true,\"data\":[]}";
+        String responseString = this.loadResourceAsString("/src/test/fixtures/successWithEmptyResponse.json");
 
         CloseableHttpClient httpClientMock = mock(CloseableHttpClient.class);
-
-
         HttpGet httpGetMock = mock(HttpGet.class);
         CloseableHttpResponse httpResponseMock = mock(CloseableHttpResponse.class);
         StatusLine statusLineMock = mock(StatusLine.class);
@@ -65,7 +61,6 @@ public class ClientTest extends BaseTestCase {
         assertEquals(0, response.getData().getData().size());
     }
 
-    @Test
     public void testExecuteGetWithListProfilesResponse()  throws IOException, IncompatibleGetterException, BadResponseException {
         String responseString = this.loadResourceAsString("/src/test/fixtures/listProfilesResponse.json");
 
@@ -120,9 +115,8 @@ public class ClientTest extends BaseTestCase {
         assertEquals(3251, profile1.getGroups().get(0).getSpaceId());
     }
 
-    @Test
     public void testExecuteGetWithIncompatibleGetterException()  throws IOException {
-        String responseString = "{\"success\":true,\"data\":[]}";
+        String responseString = this.loadResourceAsString("/src/test/fixtures/successWithEmptyResponse.json");
 
         CloseableHttpClient httpClientMock = mock(CloseableHttpClient.class);
 
@@ -163,23 +157,8 @@ public class ClientTest extends BaseTestCase {
         }
     }
 
-    @Test
     public void testExecuteGetWithCustomModel()  throws IOException {
-        String responseString = "{\n" +
-                "    \"success\": true,\n" +
-                "    \"data\": [\n" +
-                "        {\n" +
-                "            \"profileId\": 100,\n" +
-                "            \"time\": \"2017-10-01 00:00:00\",\n" +
-                "            \"fans\": 200311\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"profileId\": 100,\n" +
-                "            \"time\": \"2017-10-02 00:00:00\",\n" +
-                "            \"fans\": 200349\n" +
-                "        }\n" +
-                "\t  ]\n" +
-                "}";
+        String responseString = this.loadResourceAsString("/src/test/fixtures/customQqlResponse.json");
 
         CloseableHttpClient httpClientMock = mock(CloseableHttpClient.class);
 
@@ -230,9 +209,8 @@ public class ClientTest extends BaseTestCase {
         assertEquals(200349, node2.getFans());
     }
 
-    @Test
     public void testExecuteGetWithBadResponseExceptionFromQqlEndpoint()  throws IOException {
-        String responseString = "{\"success\":false,\"error\":{\"message\":\"It appears like the configuration does not comprise of a valid SQL query. Please check your syntax and ensure that the SQL query you have entered is a valid one. You may find hints as to what went wrong within the following message: Unable to prepare statement: 1, no such column: profile\"}}";
+        String responseString = this.loadResourceAsString("/src/test/fixtures/malformedQqlQueryResponse.json");
 
         CloseableHttpClient httpClientMock = mock(CloseableHttpClient.class);
 
@@ -273,9 +251,8 @@ public class ClientTest extends BaseTestCase {
         }
     }
 
-    @Test
     public void testExecuteGetWithBadResponseExceptionFromListProfilesEndpoint()  throws IOException {
-        String responseString = "{\"success\":false,\"error\":{\"message\":\"an internal server error has occurred, please try again later.\"}}";
+        String responseString = this.loadResourceAsString("/src/test/fixtures/internalServerErrorResponse.json");
 
         CloseableHttpClient httpClientMock = mock(CloseableHttpClient.class);
 
@@ -294,7 +271,7 @@ public class ClientTest extends BaseTestCase {
         when(httpClientMock.execute(httpGetMock)).thenReturn(httpResponseMock);
 
         Client client = new Client(httpClientMock);
-        List<Integer> profileIds = new ArrayList<Integer>();
+        List<Integer> profileIds = new ArrayList<>();
         profileIds.add(92);
         Response response = client.executeGet(
                 new Credentials(2, "secretSanta"),

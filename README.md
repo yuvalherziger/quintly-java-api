@@ -3,8 +3,8 @@
 [![Codeship Status for yuvalherziger/quintly-java-api](https://app.codeship.com/projects/5d4f67e0-b284-0135-f1e6-124eec6b3035/status?branch=master)](https://app.codeship.com/projects/258096)
 
 
-quintly's Social Media Analytics API interface for Java. 
-For more information about the QPI, see [API documentation](https://api.quintly.com/).
+A light-weight Java interface for quintly's Social Media Analytics API. 
+For more information about the API, see [quintly's API documentation](https://api.quintly.com/).
 
 ## TODO's
 
@@ -39,7 +39,7 @@ class MyApp {
         
         // create a new endpoint:
         ListProfiles endpoint = new ListProfiles();
-        Response response = client.executeGet(credentials, endpoint, null);
+        Response response = client.executeGet(credentials, endpoint);
         
         // Verify 200 status code:
         System.out.println("Response status code: " + response.getStatusCode());
@@ -131,7 +131,7 @@ class MyApp {
             profileIds,
             "SELECT profileId, time, fans FROM facebook"
         );
-        Response response = client.executeGet(credentials, endpoint, null);
+        Response response = client.executeGet(credentials, endpoint);
         
         // Verify 200 status code:
         System.out.println("Response status code: " + response.getStatusCode());

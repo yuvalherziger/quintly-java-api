@@ -1,0 +1,6 @@
+{
+  "success":false,
+  "error": {
+    "message": "an internal server error has occurred, please try again later."
+  }
+}

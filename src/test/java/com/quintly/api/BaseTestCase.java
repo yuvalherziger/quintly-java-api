@@ -8,7 +8,6 @@ abstract public class BaseTestCase extends TestCase {
 
     protected String loadResourceAsString(String relativePath) throws IOException {
         String filePath = System.getProperty("user.dir") + relativePath;
-        System.out.println(filePath);
         InputStream inputStream = new FileInputStream(filePath);
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 

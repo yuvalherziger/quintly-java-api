@@ -184,7 +184,7 @@ Feel free to submit pull requests, issues and ideas 💡
 ## Copyright and license
 MIT License
 
-Copyright (c) 2017 Yuval Herziger, quintly GmbH
+Copyright (c) 2018 Yuval Herziger, quintly GmbH
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
